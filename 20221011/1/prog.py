@@ -1,0 +1,3 @@
+inp = eval(input())
+
+
