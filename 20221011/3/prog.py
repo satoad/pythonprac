@@ -37,5 +37,6 @@ if liq > gas:
 else:
     gas_d = 20
     liq_d = round(liq * 20 / gas)
-    print(f"{'.' * gas_d} {gas} / {sum}")
+    print(f"{'.' * gas_d} {gas}/{sum}")
     print(f"{'~' * liq_d} {' ' * (gas_d - liq_d)} {liq}/{sum}")
+
