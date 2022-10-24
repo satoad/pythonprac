@@ -1,0 +1,5 @@
+:print print()
+print
+:func x y x+y
+func 1 2
+quit "{} {}"

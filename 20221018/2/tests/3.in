@@ -1,0 +1,5 @@
+:func x y z q x+y*z/q
+func 1 2 3 4
+:boom x y x+y
+boom 1 2
+quit "{} {}"

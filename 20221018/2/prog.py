@@ -9,6 +9,8 @@ a = input()
 while a.split()[0] != 'quit':
     count1 += 1
     if a[0] == ':':
+        count2 += 1
+
         b = a[1:].split()
 
         funcs[b[0]] = 'eval(\'' + b[-1] + '\',globals(),{'
@@ -22,7 +24,6 @@ while a.split()[0] != 'quit':
     else:
         b = a.split()
         if b[0] in funcs.keys():
-            count2 += 1
             tmp = funcs[b[0]].split()
             cmd = tmp[0]
             for i in range(1, len(b)):
@@ -32,4 +33,4 @@ while a.split()[0] != 'quit':
 
     a = input()
 
-print(eval(a[len(a.split()[0]):] + '.format(' + str(count2) + ',' + str(count1 + 1) + ')'))
+print(eval(a[len(a.split()[0]):] + '.format(' + str(count2 + 1) + ',' + str(count1 + 1) + ')'))
