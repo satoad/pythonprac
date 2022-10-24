@@ -1,8 +1,8 @@
 a = input().lower()
-b = {}
 
-for i in a:
-    if i.isalpha():
-        b[i] = 1
+let = set()
+for i in range(len(a)):
+    if a[i].isalpha():
+        let.add(a[i])
 
-print(len(b))
+print(int((len(let) * (len(let) - 1)) / 2))

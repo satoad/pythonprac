@@ -1,0 +1,10 @@
+:sin x sin(x)
+sin 1
+:decorate s "--<<{}>>--".format(s)
+decorate "ЖЖЖ"
+sin 2
+sin 3
+sin 4
+:cos x cos(x)
+cos 1
+quit "{}, {}"
