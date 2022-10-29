@@ -1,11 +1,18 @@
-from itertools import combinations
+from itertools import combinations_with_replacement
 
 sample = 'TOR'
 num = eval(input())
+if num > len(sample) * 2:
+    text = sample * (num//len(sample))
+    if num % len(sample) != 0:
+        text += sample
 
-text = sample * (num//len(sample))
-if num % len(sample) != 0:
-    text += sample
+    ans = list(sorted(set((filter(lambda x: ''.join(x).count(sample) == 2, combinations_with_replacement(text, num)))))) #cringe
 
-for i in sorted(filter(lambda x: ''.join(x).count(sample) >= 2, combinations(text, num))):
-    print(*i, sep='', end=', ')
+    for i in range(len(ans)):
+        print(*ans[i], sep='', end='')
+        if i != len(ans) - 1:
+            print(',', end=' ')
+
+else:
+    print(sample * 2, end='')
