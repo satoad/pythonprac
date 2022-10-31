@@ -15,5 +15,5 @@ if num > len(sample) * 2:
         if i != len(ans) - 1:
             print(',', end=' ')
 
-else:
+elif num == len(sample) * 2:
     print(sample * 2, end='')
