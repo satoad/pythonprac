@@ -46,6 +46,7 @@ class Triangle:
 
         if not (0 <= A <= 1 and 0 <= B <= 1):
             return None
+        
         x = p1[0] + A * (p2[0] - p1[0])
         y = p1[1] + A * (p2[1] - p1[1])
 
