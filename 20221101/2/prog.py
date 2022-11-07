@@ -21,7 +21,7 @@ class Triangle:
         return self.__abs__() < other.__abs__()
 
     def __eq__(self, other):
-        return self.__abs__() == other.__abs.k__()
+        return self.__abs__() == other.__abs__()
 
     def inside(self, other):
         cr1 = form((self.p1[0] - other[0], self.p2[1] - self.p1[1]), (self.p2[0] - self.p1[0], self.p1[1] - other[1]))
