@@ -1,6 +1,7 @@
 def form(a, b):
     return a[0] * a[1] - b[0] * b[1]
 
+
 class Triangle:
 
     def __init__(self, *other):
@@ -9,10 +10,12 @@ class Triangle:
         self.p3 = other[2]
 
     def __abs__(self):
-        if self.p1[0] * (self.p2[1] - self.p3[1]) + self.p2[0] * (self.p3[1] - self.p1[1]) + self.p3[0] * (self.p1[1] - self.p2[1]) == 0.0:
+        if self.p1[0] * (self.p2[1] - self.p3[1]) + self.p2[0] * (self.p3[1] - self.p1[1]) + self.p3[0] * (
+                self.p1[1] - self.p2[1]) == 0.0:
             return 0.0
         else:
-            return 0.5 * abs((self.p2[0] - self.p1[0]) * (self.p3[1] - self.p1[1]) - (self.p3[0] - self.p1[0]) * (self.p2[1] - self.p1[1]))
+            return 0.5 * abs((self.p2[0] - self.p1[0]) * (self.p3[1] - self.p1[1]) - (self.p3[0] - self.p1[0]) * (
+                        self.p2[1] - self.p1[1]))
 
     def __bool__(self):
         return self.__abs__() != 0.0
@@ -38,7 +41,7 @@ class Triangle:
 
     def line_intersect(self, p1, p2, p3, p4):
         det = form((p4[1] - p3[1], p2[0] - p1[0]), (p4[0] - p3[0], p2[1] - p1[1]))
-        if det == 0:
+        if det == 0.0:
             return None
 
         A = form((p4[0] - p3[0], p1[1] - p3[1]), (p4[1] - p3[1], p1[0] - p3[0])) / det
@@ -46,18 +49,20 @@ class Triangle:
 
         if not (0 <= A <= 1 and 0 <= B <= 1):
             return None
-        
+
         x = p1[0] + A * (p2[0] - p1[0])
         y = p1[1] + A * (p2[1] - p1[1])
 
         return (x, y)
 
     def __and__(self, other):
-        if not self.__bool__():
+        if not self.__bool__() or not other.__bool__():
             return False
 
-        #дальше кринж, не надо туда смотреть
+        if self in other or other in self:
+            return True
 
+        # дальше кринж, не надо туда смотреть
 
         p = self.line_intersect(self.p1, self.p2, other.p1, other.p2)
         if p is not None and other.inside(p):
@@ -89,7 +94,6 @@ class Triangle:
 
         p = self.line_intersect(self.p1, self.p3, other.p1, other.p3)
         if p is not None and other.inside(p):
-
             return True
 
         p = self.line_intersect(self.p1, self.p3, other.p2, other.p3)
@@ -97,3 +101,6 @@ class Triangle:
             return True
 
         return False
+
+import sys
+exec(sys.stdin.read())

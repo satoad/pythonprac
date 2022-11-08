@@ -1,0 +1,6 @@
+a = Triangle((0, 0), (3, 0), (0, 3))
+b = Triangle((0.01, 0.01), (0.2, 0.1), (0.1, 0.2))
+print(*(f"{n}({bool(x)}):{round(abs(x), 3)}" for n, x in zip("ab", (a, b))))
+print(b & a)
+print(b in a)
+print(b < a)

@@ -1,0 +1,8 @@
+a, b, c = Omnibus(), Omnibus(), Omnibus()
+del a.random
+a.i = a.j = a.k = True
+c.k = c.n = c.m = hex
+c.i = c.j = 0
+print(a.i, a.j, a.k, c.k, c.n, c.m)
+del a.k, c.m
+print(a.i, a.j, c.k, c.n)
