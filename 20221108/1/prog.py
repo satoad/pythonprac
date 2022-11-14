@@ -15,3 +15,6 @@ class DivStr(UserString):
     def __mod__(self, other):
         trim = len(self) % other
         return self[-trim:]
+
+import sys
+exec(sys.stdin.read())
