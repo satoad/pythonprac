@@ -1,6 +1,6 @@
 class Alpha:
     __slots__ = list('abcdefghijklmnopqrstuvwxyz')
-    print(__slots__)
+
     def __init__(self, **kwargs):
         for i in kwargs:
             setattr(self, i, kwargs[i])
