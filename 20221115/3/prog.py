@@ -1,6 +1,6 @@
 class Alpha:
     __slots__ = list('abcdefghijklmnopqrstuvwxyz')
-
+    print(__slots__)
     def __init__(self, **kwargs):
         for i in kwargs:
             setattr(self, i, kwargs[i])
@@ -10,7 +10,7 @@ class Alpha:
         for i in self.__slots__:
             try:
                 res += f"{i}: {getattr(self, i)}, "
-            except Exception:
+            except AttributeError:
                 pass
 
         return res[:-2]
@@ -42,7 +42,10 @@ class AlphaQ:
         for i in sorted(self.__dict__):
             try:
                 res += f"{i}: {getattr(self, i)}, "
-            except Exception:
+            except AttributeError:
                 pass
 
         return res[:-2]
+
+import sys
+exec(sys.stdin.read())
