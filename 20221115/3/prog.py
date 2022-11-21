@@ -24,15 +24,16 @@ class AlphaQ:
             else:
                 raise AttributeError
 
-    def __getattr__(self, item):
-        if item in 'abcdefghijklmnopqrstuvwxyz' and len(item) == 1:
-            return self.__dict__[item]
-        else:
-            raise AttributeError
-
     def __setattr__(self, key, value):
         if key in 'abcdefghijklmnopqrstuvwxyz' and len(key) == 1:
             self.__dict__[key] = value
+        else:
+            raise AttributeError
+
+
+    def __getattr__(self, item):
+        if item in 'abcdefghijklmnopqrstuvwxyz' and len(item) == 1:
+            return self.__dict__[item]
         else:
             raise AttributeError
 
