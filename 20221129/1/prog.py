@@ -17,3 +17,6 @@ class dump(type):
             else:
                 new_attrs[attr] = dec(v)
         return type(clsname, bases, new_attrs)
+
+import sys
+exec(sys.stdin.read())

@@ -27,3 +27,6 @@ class check(type):
 
         attrs["check_annotations"] = check_annotations
         return type(clsname, bases, attrs)
+
+import sys
+exec(sys.stdin.read())
