@@ -1,0 +1,15 @@
+@objcount
+class C:
+    def __init__(self, a):
+        self.a = str(a)
+
+    def __str__(self):
+        return self.a + ' abobs'
+
+c, d, e = C(5), C(10), C(15)
+print(C.counter)
+print(c, d, e)
+del c
+print(C.counter)
+del e
+print(C.counter)

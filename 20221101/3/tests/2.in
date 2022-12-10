@@ -1,0 +1,13 @@
+f, g, h = Grange(6, 3, 108575), Grange(7, 5, 104856), Grange(11, 11, 10485577)
+a, b, c = Grange(12, 4, 1000), Grange(7, 5, 104856), Grange(5, 5, 10000)
+print(f"{f=}, {g=}, {h=}")
+print(f"{list(a)}({not(a)}), {list(c)}({not(c)})")
+print(f"{len(f)=}, {len(g)=}, {len(h)=}")
+print(f"{len(list(f))=}, {len(list(g))=}, {len(list(h))=}")
+print(f"{f[2]=}, {h[33]=}")
+one, two = f[3:3276], h[3:3267:5]
+print(f"{one=}, {one[1]=}")
+print(f"{two=}, {two[2]=}, {list(two)=}")
+one, two = f[3:3276], b[1:1:1]
+print(f"{one=}, {one[1]=}")
+print(f"{two=}, {two[2]=}, {list(two)=}")

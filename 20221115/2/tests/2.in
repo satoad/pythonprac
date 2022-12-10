@@ -1,0 +1,9 @@
+class C:
+  num = Num()
+print(C().num)
+c, d = C(), C()
+c.num = "qwerqwew123123231312313123rqwer"
+d.num = "qwerqwew123123231312313123rqwer"
+print(c.num+d.num)
+d.num = range(1000, 10000, 7)
+print(c.num+d.num)
