@@ -1,0 +1,24 @@
+class C(metaclass=check):
+    A: list[int]
+    B: str = "QQ"
+    A1: int = 5
+    A2: list[float]
+
+
+c = C()
+print(c.check_annotations())
+c.A = "ZZ"
+print(c.check_annotations())
+c.A = [100500, 42, 0]
+print(c.check_annotations())
+c.B = type("Boo",(str,),{})(42)
+print(c.check_annotations())
+c.A = ["FALSE"]
+print(c.check_annotations())
+c.A1 = 'aboba'
+print(c.check_annotations())
+c.A1 = 10
+print(c.check_annotations())
+c.A2 = [1.1, 2.2]
+print(c.check_annotations())
+

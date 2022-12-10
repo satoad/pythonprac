@@ -1,0 +1,21 @@
+class C(metaclass=dump):
+	def __init__(self, val):
+		self.val = val
+
+	def add(self, other, another=None):
+		self.val += other
+		return self.val + other + (another or self.val)
+
+c = C(10)
+print(c.add(9))
+print(c.add(10,another=10))
+print(c.add(15))
+print(c.add(20,another=30))
+print(c.add(15))
+print(c.add(20,another=30))
+print(c.add(15))
+print(c.add(5,another=12))
+print(c.add(1))
+print(c.add(2,another=3))
+print(c.add(15))
+print(c.add(10,another=5))

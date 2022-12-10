@@ -1,0 +1,26 @@
+class C(metaclass=check):
+    A: list[int]
+    B: str = "QQQQQ!"
+
+c = C()
+print(c.check_annotations())
+c.A = "ZZ"
+print(c.check_annotations())
+c.A = [100500, 42, 0]
+print(c.check_annotations())
+c.B = type("Boo",(str,),{})(42)
+print(c.check_annotations())
+c.A = ["FALSE"]
+print(c.check_annotations())
+c.A = [10050, 4, 0]
+print(c.check_annotations())
+c.B = type("Woo",(str,),{})(4)
+print(c.check_annotations())
+c.A = ["FALSE"]
+print(c.check_annotations())
+c.A = [1005, 0, 0]
+print(c.check_annotations())
+c.B = type("Goo",(str,),{})(0)
+print(c.check_annotations())
+c.A = ["FALSE"]
+print(c.check_annotations())

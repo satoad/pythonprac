@@ -1,0 +1,5 @@
+__init__: (10,), {}
+mul: (9,), {}
+something * 9 = idk <bound method dec.<locals>.new_f of <__main__.C object at 0x7f3166bdb130>>
+add: (9,), {'another': 10}
+29
