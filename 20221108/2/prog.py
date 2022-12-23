@@ -22,7 +22,7 @@ while True:
     try:
         sq = triangle_square(a)
     except InvalidInput:
-        print('Invalid Input')
+        print('Invalid input')
     except BadTriangle:
         print('Not a triangle')
     else:
