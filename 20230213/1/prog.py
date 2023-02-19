@@ -3,17 +3,22 @@ import sys
 import zlib
 
 
-def print_info(hash):
-    commit_info_path = '/Users/toad/PycharmProjects/pythonprac/pythonprac/.git/objects'
+def print_info(hash, parent_flag=False):
+    commit_info_path = '../../.git/objects'
     commit_path = os.path.join(commit_info_path, hash[:2], hash[2:])
 
-    print(commit_path)
+    if not os.path.exists(commit_path):
+        return
 
     with open(commit_path, 'rb') as commit_info:
         commit = zlib.decompress(commit_info.read()).partition(b'\x00')
 
     commit_body = commit[2].decode()
-    print(commit_body)
+    if not parent_flag:
+        print(commit_body)
+    else:
+        print("TREE for commit", hash)
+
     commit_body = commit_body.replace('\n', ' ').split('tree')[1].split()
 
     tree_hash = commit_body[0]
@@ -32,12 +37,11 @@ def print_info(hash):
         if head[0].decode() == '100644':
             print('blob', git_id, head[1].decode())
 
-
     parent_hash = commit_body[2]
-    print_info(parent_hash)
+    if parent_hash != -1:
+        print_info(parent_hash, True)
 
-
-branch_path = '/Users/toad/PycharmProjects/pythonprac/pythonprac/.git/refs/heads'
+branch_path = '../../.git/refs/heads'
 
 if len(sys.argv) == 1:
     for br in os.listdir(branch_path):
