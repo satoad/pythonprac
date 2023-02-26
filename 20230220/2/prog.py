@@ -17,7 +17,7 @@ class Dungeon:
             print('Replaced the old monster')
 
     def encounter(self, x, y):
-        print(cowsay(self.dungeon[x][y].phrase))
+        print(cowsay(self.dungeon[x][y].phrase, cow=self.dungeon[x][y].name))
 
     def change_hero_pos(self, pos):
         self.hero.pos[0] = (self.hero.pos[0] + pos[0]) % 10
