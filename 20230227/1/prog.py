@@ -1,5 +1,22 @@
-from cowsay import cowsay, list_cows
+from cowsay import cowsay, list_cows, read_dot_cow
 
+from io import StringIO
+
+bat = read_dot_cow(StringIO("""
+$the_cow = <<EOC;
+         $thoughts
+          $thoughts
+    ,_                    _,
+    ) '-._  ,_    _,  _.-' (
+    )  _.-'.|\\--//|.'-._  (
+     )'   .'\/o\/o\/'.   `(
+      ) .' . \====/ . '. (
+       )  / <<    >> \  (
+        '-._/``  ``\_.-'
+  jgs     __\\'--'//__
+         (((""`  `"")))
+EOC
+"""))
 
 class Dungeon:
     def __init__(self, hero):
@@ -17,7 +34,10 @@ class Dungeon:
             print('Replaced the old monster')
 
     def encounter(self, x, y):
-        print(cowsay(self.dungeon[x][y].phrase, cow=self.dungeon[x][y].name))
+        if self.dungeon[x][y].name == "jgsbat":
+                    print(cowsay(self.dungeon[x][y].phrase, cowfile=bat))
+        else:
+            print(cowsay(self.dungeon[x][y].phrase, cow=self.dungeon[x][y].name))
 
     def change_hero_pos(self, pos):
         self.hero.pos[0] = (self.hero.pos[0] + pos[0]) % 10
@@ -58,7 +78,7 @@ def game():
                 dungeon.change_hero_pos((1, 0))
             case 'addmon':
                 if len(inp) == 5:
-                    if inp[1] in list_cows():
+                    if inp[1] in list_cows() or inp[1] == "jgsbat":
                         Monster(inp[1], [int(inp[2]), int(inp[3])], inp[4], dungeon)
                     else:
                         print('Cannot add unknown monster')
