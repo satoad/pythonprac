@@ -53,10 +53,11 @@ class Hero:
 
 
 class Monster:
-    def __init__(self, name, pos, phrase, dungeon):
+    def __init__(self, name, pos, phrase, hp, dungeon):
         self.name = name
         self.pos = pos
         self.phrase = phrase
+        self.hp = hp
         dungeon.add_mob(self)
 
 
@@ -77,9 +78,10 @@ def game():
             case 'right':
                 dungeon.change_hero_pos((1, 0))
             case 'addmon':
-                if len(inp) == 5:
+                if len(inp) == 9:
                     if inp[1] in list_cows() or inp[1] == "jgsbat":
-                        Monster(inp[1], [int(inp[2]), int(inp[3])], inp[4], dungeon)
+                        Monster(inp[1], [int(inp[inp.index("coords") + 1]), int(inp[inp.index("coords") + 2])],
+                                         inp[inp.index("hello") + 1], int(inp[inp.index("hp") + 1]), dungeon)
                     else:
                         print('Cannot add unknown monster')
                 else:
