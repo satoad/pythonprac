@@ -1,5 +1,5 @@
 from cowsay import cowsay, list_cows, read_dot_cow
-
+import shlex
 from io import StringIO
 
 bat = read_dot_cow(StringIO("""
@@ -65,7 +65,7 @@ def game():
     dungeon = Dungeon(player)
 
     while inp := input():
-        inp = inp.split()
+        inp = shlex.split(inp)
 
         match inp[0]:
             case 'up':
