@@ -48,10 +48,35 @@ class Dungeon:
         if self.dungeon[self.hero.pos[0]][self.hero.pos[1]] is not None:
             self.encounter(self.hero.pos[0], self.hero.pos[1])
 
+    def attack(self, pos):
+        if isinstance(self.dungeon[pos[0]][pos[1]], Monster):
+            mob = self.dungeon[pos[0]][pos[1]]
+            dmg = self.hero.damage
+            if mob.hp < dmg:
+                dmg = mob.hp
+
+            mob.hp -= dmg
+
+            print(f"Attacked <{mob.name}>,  damage <{dmg}> hp")
+
+            if mob.hp == 0:
+                print(f"{mob.name} died")
+                self.dungeon[pos[0]][pos[1]] = None
+            else:
+                self.dungeon[pos[0]][pos[1]].hp = mob.hp
+                print(f"{mob.name} now has {mob.hp}")
+
+        else:
+            print("No monster here")
+
 
 class Hero:
-    def __init__(self, pos=[0, 0]):
+    def __init__(self, pos=None):
+        if pos is None:
+            pos = [0, 0]
+
         self.pos = pos
+        self.damage = 10
 
 
 class Monster:
@@ -91,6 +116,9 @@ class Game(cmd.Cmd):
                 print("Cannot add unknown monster")
         else:
             print("Invalid arguments")
+
+    def do_attack(self, args):
+        self.dungeon.attack(self.player.pos)
 
     def default(self, line: str) -> None:
         print("Invalid command")
