@@ -3,6 +3,7 @@ import shlex
 from io import StringIO
 import cmd
 
+
 bat = read_dot_cow(StringIO("""
 $the_cow = <<EOC;
          $thoughts
@@ -48,10 +49,13 @@ class Dungeon:
         if self.dungeon[self.hero.pos[0]][self.hero.pos[1]] is not None:
             self.encounter(self.hero.pos[0], self.hero.pos[1])
 
-    def attack(self, pos):
+    def attack(self, pos, weapon=None):
         if isinstance(self.dungeon[pos[0]][pos[1]], Monster):
+            if weapon is None:
+                weapon = "sword"
+
             mob = self.dungeon[pos[0]][pos[1]]
-            dmg = self.hero.damage
+            dmg = self.hero.weapons[weapon]
             if mob.hp < dmg:
                 dmg = mob.hp
 
@@ -74,9 +78,8 @@ class Hero:
     def __init__(self, pos=None):
         if pos is None:
             pos = [0, 0]
-
         self.pos = pos
-        self.damage = 10
+        self.weapons = {"sword": 10, "spear": 15, "axe": 20}
 
 
 class Monster:
@@ -118,7 +121,32 @@ class Game(cmd.Cmd):
             print("Invalid arguments")
 
     def do_attack(self, args):
-        self.dungeon.attack(self.player.pos)
+        args = shlex.split(args)
+        if len(args) > 0:
+            if args[0] == "with":
+                if args[1] in self.player.weapons.keys():
+                    self.dungeon.attack(self.player.pos, args[1])
+                else:
+                    print("Unknown weapon")
+            else:
+                print("Invalid arguments")
+        else:
+            self.dungeon.attack(self.player.pos)
+
+    def complete_attack(self, prefix, line, start, end):
+        complete = {
+            "attack": {
+                "with": ["sword", "spear", "axe"],
+            },
+        }
+
+        line = shlex.split(line)
+        command = line[0]
+        if start == end:
+            key = line[-1]
+        else:
+            key = line[-2]
+        return [s for s in complete[command][key] if s.startswith(prefix)]
 
     def default(self, line: str) -> None:
         print("Invalid command")
