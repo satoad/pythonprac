@@ -24,15 +24,14 @@ class Dungeon:
     def __init__(self, hero):
         self.dungeon = [[None for i in range(10)] for j in range(10)]
         self.hero = hero
-        pass
 
     def add_mob(self, mob):
         if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
             self.dungeon[mob.pos[0]][mob.pos[1]] = mob
-            print(f'Added monster <{mob.name}> to (<{mob.pos[0]}>, <{mob.pos[1]}>) saying <{mob.phrase}>')
+            print(f'Added monster {mob.name} to ({mob.pos[0]}>, <{mob.pos[1]}) saying {mob.phrase}')
         else:
             self.dungeon[mob.pos[0]][mob.pos[1]] = mob
-            print(f'Added monster {mob.name} to (<{mob.pos[0]}>, <{mob.pos[1]}>) saying <{mob.phrase}>')
+            print(f'Added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}')
             print('Replaced the old monster')
 
     def encounter(self, x, y):
@@ -44,28 +43,31 @@ class Dungeon:
     def change_hero_pos(self, pos):
         self.hero.pos[0] = (self.hero.pos[0] + pos[0]) % 10
         self.hero.pos[1] = (self.hero.pos[1] + pos[1]) % 10
-        print(f'Moved to (<{self.hero.pos[0]}>, <{self.hero.pos[1]}>)')
+        print(f'Moved to ({self.hero.pos[0]}, {self.hero.pos[1]})')
         if self.dungeon[self.hero.pos[0]][self.hero.pos[1]] is not None:
             self.encounter(self.hero.pos[0], self.hero.pos[1])
 
-    def attack(self, pos):
+    def attack(self, pos, name):
         if isinstance(self.dungeon[pos[0]][pos[1]], Monster):
             mob = self.dungeon[pos[0]][pos[1]]
-            dmg = self.hero.damage
-            if mob.hp < dmg:
-                dmg = mob.hp
 
-            mob.hp -= dmg
+            if name == mob.name:
+                dmg = self.hero.damage
+                if mob.hp < dmg:
+                    dmg = mob.hp
 
-            print(f"Attacked <{mob.name}>,  damage <{dmg}> hp")
+                mob.hp -= dmg
 
-            if mob.hp == 0:
-                print(f"{mob.name} died")
-                self.dungeon[pos[0]][pos[1]] = None
+                print(f"Attacked {mob.name},  damage {dmg} hp")
+
+                if mob.hp == 0:
+                    print(f"{mob.name} died")
+                    self.dungeon[pos[0]][pos[1]] = None
+                else:
+                    self.dungeon[pos[0]][pos[1]].hp = mob.hp
+                    print(f"{mob.name} now has {mob.hp}")
             else:
-                self.dungeon[pos[0]][pos[1]].hp = mob.hp
-                print(f"{mob.name} now has {mob.hp}")
-
+                print(f"No {name} here")
         else:
             print("No monster here")
 
@@ -118,7 +120,24 @@ class Game(cmd.Cmd):
             print("Invalid arguments")
 
     def do_attack(self, args):
-        self.dungeon.attack(self.player.pos)
+        args = shlex.split(args)
+
+        if len(args) > 0:
+            self.dungeon.attack(self.player.pos, args[0])
+        else:
+            print("Invalid arguments")
+
+    def complete_attack(self, prefix, line, start, end):
+        complete = list_cows() + ["jgsbat"]
+
+        line = shlex.split(line)
+        if prefix:
+            return [
+                comp for comp in complete
+                if comp.startswith(prefix)
+            ]
+        else:
+            return complete
 
     def default(self, line: str) -> None:
         print("Invalid command")
