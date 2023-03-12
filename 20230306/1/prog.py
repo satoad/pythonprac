@@ -25,15 +25,14 @@ class Dungeon:
     def __init__(self, hero):
         self.dungeon = [[None for i in range(10)] for j in range(10)]
         self.hero = hero
-        pass
 
     def add_mob(self, mob):
         if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
             self.dungeon[mob.pos[0]][mob.pos[1]] = mob
-            print(f'Added monster <{mob.name}> to (<{mob.pos[0]}>, <{mob.pos[1]}>) saying <{mob.phrase}>')
+            print(f'Added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}')
         else:
             self.dungeon[mob.pos[0]][mob.pos[1]] = mob
-            print(f'Added monster {mob.name} to (<{mob.pos[0]}>, <{mob.pos[1]}>) saying <{mob.phrase}>')
+            print(f'Added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}')
             print('Replaced the old monster')
 
     def encounter(self, x, y):
@@ -45,7 +44,7 @@ class Dungeon:
     def change_hero_pos(self, pos):
         self.hero.pos[0] = (self.hero.pos[0] + pos[0]) % 10
         self.hero.pos[1] = (self.hero.pos[1] + pos[1]) % 10
-        print(f'Moved to (<{self.hero.pos[0]}>, <{self.hero.pos[1]}>)')
+        print(f'Moved to ({self.hero.pos[0]}, {self.hero.pos[1]})')
         if self.dungeon[self.hero.pos[0]][self.hero.pos[1]] is not None:
             self.encounter(self.hero.pos[0], self.hero.pos[1])
 
@@ -61,7 +60,7 @@ class Dungeon:
 
             mob.hp -= dmg
 
-            print(f"Attacked <{mob.name}>,  damage <{dmg}> hp")
+            print(f"Attacked {mob.name},  damage {dmg} hp")
 
             if mob.hp == 0:
                 print(f"{mob.name} died")
