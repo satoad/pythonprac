@@ -95,39 +95,6 @@ class Game(cmd.Cmd):
     def default(self, line: str) -> None:
         print("Invalid command")
 
-'''
-def game():
-    player = Hero()
-    dungeon = Dungeon(player)
-
-    while inp := input():
-        inp = shlex.split(inp)
-
-        match inp[0]:
-            case 'up':
-                dungeon.change_hero_pos((0, -1))
-            case 'down':
-                dungeon.change_hero_pos((0, 1))
-            case 'left':
-                dungeon.change_hero_pos((-1, 0))
-            case 'right':
-                dungeon.change_hero_pos((1, 0))
-            case 'addmon':
-                if len(inp) == 9:
-                    if inp[1] in list_cows() or inp[1] == "jgsbat":
-                        Monster(inp[1], [int(inp[inp.index("coords") + 1]), int(inp[inp.index("coords") + 2])],
-                                         inp[inp.index("hello") + 1], int(inp[inp.index("hp") + 1]), dungeon)
-                    else:
-                        print('Cannot add unknown monster')
-                else:
-                    print('Invalid arguments')
-            case _:
-                print('Invalid command')
-
-
-game()
-'''
-
 
 def game():
     Game().cmdloop()
