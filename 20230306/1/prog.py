@@ -3,7 +3,6 @@ import shlex
 from io import StringIO
 import cmd
 
-
 bat = read_dot_cow(StringIO("""
 $the_cow = <<EOC;
          $thoughts
@@ -48,27 +47,30 @@ class Dungeon:
         if self.dungeon[self.hero.pos[0]][self.hero.pos[1]] is not None:
             self.encounter(self.hero.pos[0], self.hero.pos[1])
 
-    def attack(self, pos, weapon=None):
+    def attack(self, pos, name, weapon=None):
         if isinstance(self.dungeon[pos[0]][pos[1]], Monster):
             if weapon is None:
                 weapon = "sword"
 
             mob = self.dungeon[pos[0]][pos[1]]
-            dmg = self.hero.weapons[weapon]
-            if mob.hp < dmg:
-                dmg = mob.hp
 
-            mob.hp -= dmg
+            if name == mob.name:
+                dmg = self.hero.weapons[weapon]
+                if mob.hp < dmg:
+                    dmg = mob.hp
 
-            print(f"Attacked {mob.name},  damage {dmg} hp")
+                mob.hp -= dmg
 
-            if mob.hp == 0:
-                print(f"{mob.name} died")
-                self.dungeon[pos[0]][pos[1]] = None
+                print(f"Attacked {mob.name}, damage {dmg} hp")
+
+                if mob.hp == 0:
+                    print(f"{mob.name} died")
+                    self.dungeon[pos[0]][pos[1]] = None
+                else:
+                    self.dungeon[pos[0]][pos[1]].hp = mob.hp
+                    print(f"{mob.name} now has {mob.hp}")
             else:
-                self.dungeon[pos[0]][pos[1]].hp = mob.hp
-                print(f"{mob.name} now has {mob.hp}")
-
+                print(f"No {name} here")
         else:
             print("No monster here")
 
@@ -121,31 +123,47 @@ class Game(cmd.Cmd):
 
     def do_attack(self, args):
         args = shlex.split(args)
-        if len(args) > 0:
-            if args[0] == "with":
-                if args[1] in self.player.weapons.keys():
-                    self.dungeon.attack(self.player.pos, args[1])
+        if len(args) == 3:
+            if args[1] == "with":
+                if args[2] in self.player.weapons.keys():
+                    self.dungeon.attack(self.player.pos, args[0], args[2])
                 else:
                     print("Unknown weapon")
             else:
                 print("Invalid arguments")
+        elif len(args) == 1:
+            self.dungeon.attack(self.player.pos, args[0])
         else:
-            self.dungeon.attack(self.player.pos)
+            print("Invalid arguments")
 
     def complete_attack(self, prefix, line, start, end):
-        complete = {
-            "attack": {
-                "with": ["sword", "spear", "axe"],
-            },
-        }
+        complete_name = list_cows() + ["jgsbat"]
+        complete_weapon = ["sword", "spear", "axe"]
 
         line = shlex.split(line)
-        command = line[0]
-        if start == end:
-            key = line[-1]
-        else:
-            key = line[-2]
-        return [s for s in complete[command][key] if s.startswith(prefix)]
+        if prefix and len(line) == 2:
+            return [
+                comp for comp in complete_name
+                if comp.startswith(prefix)
+            ]
+        elif len(line) == 1 and not prefix:
+            return complete_name
+        elif len(line) == 2:
+            if not prefix:
+                return ["with"]
+            else:
+                return [
+                    comp for comp in ["with"]
+                    if comp.startswith(prefix)
+                ]
+        elif len(line) == 3:
+            if not prefix:
+                return complete_weapon
+            else:
+                return [
+                    comp for comp in complete_weapon
+                    if comp.startswith(prefix)
+                ]
 
     def default(self, line: str) -> None:
         print("Invalid command")
