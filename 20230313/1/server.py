@@ -41,7 +41,7 @@ class Dungeon:
 
                 mob.hp -= dmg
 
-                msg = [f'Attacked {mob.name}, damage {dmg} hp\n']
+                msg = [f'Attacked {mob.name}, damage {dmg} hp']
 
                 if mob.hp == 0:
                     msg += [f'{mob.name} died']
@@ -49,11 +49,10 @@ class Dungeon:
                 else:
                     self.dungeon[pos[0]][pos[1]].hp = mob.hp
                     msg += [f'{mob.name} now has {mob.hp} hp']
-                return shlex.join(msg)
             else:
                 msg = [f'No {name} here']
 
-        return shlex.join(msg)
+        return "\n".join(msg)
 
 
 class Hero:
@@ -118,4 +117,3 @@ async def main():
         await server.serve_forever()
 
 asyncio.run(main())
-
