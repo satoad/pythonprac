@@ -1,0 +1,40 @@
+From 5ece2e829c94cfbc1ebc24230c6c9e7e2151f886 Mon Sep 17 00:00:00 2001
+From: satoad <vsagalev@gmail.com>
+Date: Fri, 17 Mar 2023 23:18:41 +0300
+Subject: [PATCH 3/4] Removed debug print
+
+---
+ 20230313/1/server.py | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/20230313/1/server.py b/20230313/1/server.py
+index a77b0f0..bcee73a 100644
+--- a/20230313/1/server.py
++++ b/20230313/1/server.py
+@@ -28,7 +28,6 @@ class Dungeon:
+         msg = [f'Moved to ({self.hero.pos[0]}, {self.hero.pos[1]})']
+         if self.dungeon[self.hero.pos[0]][self.hero.pos[1]] is not None:
+             msg += self.encounter(self.hero.pos[0], self.hero.pos[1])
+-        print(msg)
+         return msg
+ 
+     def attack(self, pos, name, dmg):
+@@ -81,7 +80,6 @@ async def echo(reader, writer):
+         data = (await reader.readline())
+         msg = shlex.split(data.decode().strip())
+         ans = ''
+-        print(msg)
+         match msg:
+             case ["up"]:
+                 ans = "\n".join(dungeon.change_hero_pos((0, -1)))
+@@ -100,7 +98,6 @@ async def echo(reader, writer):
+                                                 args[args.index("hello") + 1], int(args[args.index("hp") + 1])))
+ 
+             case ['attack', *args]:
+-                print(args)
+                 ans = dungeon.attack(player.pos, args[0], int(args[1]))
+ 
+             case ['Connect']:
+-- 
+2.39.2
+
