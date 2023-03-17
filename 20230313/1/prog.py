@@ -28,7 +28,6 @@ def send_recv_serv(msg):
 
     if len(ans.split("\n")) == 3:
         ans = ans.split("\n")
-        print(ans[0])
         if ans[1] == "jgsbat":
             print(cowsay(ans[1], cowfile=bat))
         else:
