@@ -1,0 +1,43 @@
+From b7c9ef311da19c4469c3c93f7f76ae2cdd7d0bfb Mon Sep 17 00:00:00 2001
+From: satoad <vsagalev@gmail.com>
+Date: Fri, 17 Mar 2023 23:28:33 +0300
+Subject: [PATCH 4/4] Fixed output
+
+---
+ 20230313/1/server.py | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/20230313/1/server.py b/20230313/1/server.py
+index bcee73a..4003a80 100644
+--- a/20230313/1/server.py
++++ b/20230313/1/server.py
+@@ -41,7 +41,7 @@ class Dungeon:
+ 
+                 mob.hp -= dmg
+ 
+-                msg = [f'Attacked {mob.name}, damage {dmg} hp\n']
++                msg = [f'Attacked {mob.name}, damage {dmg} hp']
+ 
+                 if mob.hp == 0:
+                     msg += [f'{mob.name} died']
+@@ -49,11 +49,10 @@ class Dungeon:
+                 else:
+                     self.dungeon[pos[0]][pos[1]].hp = mob.hp
+                     msg += [f'{mob.name} now has {mob.hp} hp']
+-                return shlex.join(msg)
+             else:
+                 msg = [f'No {name} here']
+ 
+-        return shlex.join(msg)
++        return "\n".join(msg)
+ 
+ 
+ class Hero:
+@@ -118,4 +117,3 @@ async def main():
+         await server.serve_forever()
+ 
+ asyncio.run(main())
+-
+-- 
+2.39.2
+
