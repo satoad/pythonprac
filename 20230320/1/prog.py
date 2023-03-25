@@ -2,39 +2,19 @@ import sys
 import cmd
 import socket
 import shlex
-from io import StringIO
-from cowsay import cowsay, list_cows, read_dot_cow
-
-bat = read_dot_cow(StringIO("""
-$the_cow = <<EOC;
-         $thoughts
-          $thoughts
-    ,_                    _,
-    ) '-._  ,_    _,  _.-' (
-    )  _.-'.|\\--//|.'-._  (
-     )'   .'\/o\/o\/'.   `(
-      ) .' . \====/ . '. (
-       )  / <<    >> \  (
-        '-._/``  ``\_.-'
-  jgs     __\\'--'//__
-         (((""`  `"")))
-EOC
-"""))
+import readline
+import threading
+from cowsay import list_cows
 
 
-def send_recv_serv(msg):
-    s.send((msg + '\n').encode())
-    ans = s.recv(1024).decode().strip().replace("'", "")
+def recv(cmdline):
+    while True:
+        ans = s.recv(2048).decode()
+        if ans:
+            if ans.strip() == "Disconnect":
+                break
 
-    if len(ans.split("\n")) == 3:
-        ans = ans.split("\n")
-        if ans[1] == "jgsbat":
-            print(cowsay(ans[1], cowfile=bat))
-        else:
-            print(cowsay(ans[1], cow=ans[2]))
-    else:
-        print(ans)
-    return
+            print(f"\n{ans}\n{cmdline.prompt}{readline.get_line_buffer()}", end="", flush=True)
 
 
 class Game(cmd.Cmd):
@@ -43,24 +23,30 @@ class Game(cmd.Cmd):
         self.prompt = prompt
         self.use_rawinput = False
 
+    def do_login(self, args):
+        s.send(("login " + args + '\n').encode())
+
+    def do_who(self, args):
+        s.send(("who\n").encode())
+
     def do_up(self, args):
-        send_recv_serv("up")
+        s.send(("up\n").encode())
 
     def do_down(self, args):
-        send_recv_serv("down")
+        s.send(("down\n").encode())
 
     def do_left(self, args):
-        send_recv_serv("left")
+        s.send(("left\n").encode())
 
     def do_right(self, args):
-        send_recv_serv("right")
+        s.send(("right\n").encode())
 
     def do_addmon(self, args):
         inp = shlex.split(args)
         if len(inp) == 8:
             if inp[0] in list_cows() or inp[0] == "jgsbat":
                 msg = "addmon " + args
-                send_recv_serv(msg)
+                s.send((msg + '\n').encode())
             else:
                 print("Cannot add unknown monster")
         else:
@@ -73,15 +59,15 @@ class Game(cmd.Cmd):
         if len(inp) == 3:
             if inp[1] == "with":
                 if inp[2] in weapons:
-                    msg = "attack " + inp[0] + " " + str(weapons[inp[2]])
-                    send_recv_serv(msg)
+                    msg = "attack " + inp[0] + " " + inp[2]
+                    s.send((msg + '\n').encode())
                 else:
                     print("Unknown weapon")
             else:
                 print("Invalid arguments")
         elif len(inp) == 1:
-            msg = ' '.join(["attack", inp[0], str(weapons["sword"])])
-            send_recv_serv(msg)
+            msg = ' '.join(["attack", inp[0], "sword"])
+            s.send((msg + '\n').encode())
         else:
             print("Invalid arguments")
 
@@ -114,18 +100,27 @@ class Game(cmd.Cmd):
                     if comp.startswith(prefix)
                 ]
 
+    def do_quit(self, args):
+        s.send("quit\n".encode())
+        print("Disconnected")
+        sys.exit()
+
     def default(self, line: str) -> None:
         print("Invalid command")
 
 
 def game():
     print(s.recv(1024).decode().strip())
+
+    cmdline = Game()
+    gm = threading.Thread(target=recv, args=(cmdline,))
+    gm.start()
     Game().cmdloop()
 
 
 if __name__ == "__main__":
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 1337))
-        s.send("Connect\n".encode())
+        s.connect(('localhost', 1337))
+        s.send(f"login {sys.argv[1]}\n".encode())
         game()
 
