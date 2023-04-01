@@ -102,7 +102,7 @@ class Game(cmd.Cmd):
                     comp for comp in complete_weapon
                     if comp.startswith(prefix)
                 ]
-
+    
     def do_quit(self, args):
         s.send("quit\n".encode())
         sys.exit()

@@ -257,5 +257,4 @@ async def main():
         await server.serve_forever()
 
 dungeon = Dungeon()
-asyncio.run(main())
 
