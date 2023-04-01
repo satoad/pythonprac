@@ -40,6 +40,9 @@ class Game(cmd.Cmd):
 
     def do_right(self, args):
         s.send(("right\n").encode())
+        
+    def do_sayall(self, args):
+        s.send(("sayall " + args + '\n').encode())
 
     def do_addmon(self, args):
         inp = shlex.split(args)
@@ -102,7 +105,6 @@ class Game(cmd.Cmd):
 
     def do_quit(self, args):
         s.send("quit\n".encode())
-        print("Disconnected")
         sys.exit()
 
     def default(self, line: str) -> None:

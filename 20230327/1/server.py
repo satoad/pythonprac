@@ -139,7 +139,6 @@ async def echo(reader, writer):
                 send = asyncio.create_task(reader.readline())
 
                 message = shlex.split(q.result().decode().strip())
-                print(message)
                 match message:
                     case ["login", nickname]:
                         if me in Player.players:
@@ -210,7 +209,15 @@ async def echo(reader, writer):
                             else:
                                 for i in list(Player.players.values()):
                                     await users[i.address].put(ans[0])
-
+                    
+                    case ['sayall', *args]:
+                        if me not in Player.players:
+                            await users[me].put("You are not logged in.")
+                        else:
+                            ans = f"{Player.players[me].name}: {args[0]}"
+                            for i in list(Player.players.values()):
+                                await users[i.address].put(ans)
+                            
                     case ["quit"]:
                         if me not in Player.players:
                             await users[me].put("You are not logged in.")
@@ -220,7 +227,7 @@ async def echo(reader, writer):
                             del Player.players[me], users[me]
                             writer.write("Disconnect".encode())
                             writer.close()
-
+                
                             await writer.wait_closed()
 
                     case _:
