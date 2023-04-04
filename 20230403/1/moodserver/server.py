@@ -53,9 +53,11 @@ class Monster:
         self.phrase = phrase
         self.hp = hp
 
+
 async def broadcast(ans):
     for i in list(Player.players.values()):
         i.writer.write(ans.encode())
+
 
 loop = asyncio.get_event_loop()
 
@@ -91,7 +93,6 @@ class Dungeon:
         else:
             return [cowsay(self.dungeon[x][y].phrase, cow=self.dungeon[x][y].name)]
 
-    
     def mob_move(self):
         direction = {(0, 1): "up", (0, -1): "down", (1, 0): "right", (-1, 0): "left"}
         first = True
@@ -100,7 +101,7 @@ class Dungeon:
                 if first:
                     time.sleep(1)
                     first = False
-                    
+
                 flag = True
                 while flag:
                     mob = random.choice([i for i in list(self.mobs.values())])
@@ -109,13 +110,13 @@ class Dungeon:
 
                     mob.pos[0] = (mob.pos[0] + vect[0]) % 10
                     mob.pos[1] = (mob.pos[1] + vect[1]) % 10
-                    
+
                     if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
                         self.dungeon[pos[0]][pos[1]] = None
                         self.dungeon[mob.pos[0]][mob.pos[1]] = mob
                         ans = f"{mob.name} moved one cell {direction[tuple(vect)]}"
                         loop.run_until_complete(broadcast(ans))
-                        
+
                         del self.mobs[tuple(pos)]
                         self.mobs.update({tuple(mob.pos): mob})
                         for i in list(self.heroes.values()):
@@ -132,8 +133,7 @@ class Dungeon:
                 time.sleep(10)
         else:
             first = True
-                
-                
+
     def change_hero_pos(self, name, pos):
         self.heroes[name].pos[0] = (self.heroes[name].pos[0] + pos[0]) % 10
         self.heroes[name].pos[1] = (self.heroes[name].pos[1] + pos[1]) % 10
@@ -183,14 +183,13 @@ gm.start()
 
 async def echo(reader, writer):
     me = "{}:{}".format(*writer.get_extra_info('peername'))
-    print(me)
+    #print(me)
     users[me] = asyncio.Queue()
     send = asyncio.create_task(reader.readline())
     receive = asyncio.create_task(users[me].get())
 
     while not reader.at_eof():
         done, pending = await asyncio.wait([send, receive], return_when=asyncio.FIRST_COMPLETED)
-        # print(list(Player.players.values()))
         names = [i.name for i in list(Player.players.values())]
 
         for q in done:
@@ -198,54 +197,44 @@ async def echo(reader, writer):
                 send = asyncio.create_task(reader.readline())
 
                 message = shlex.split(q.result().decode().strip())
-                match message:
-                    case ["login", nickname]:
-                        if me in Player.players:
-                            await Player.players[me].put("You are already logged in.")
+                if me not in Player.players and message[0] != "login" and message[0] != "who":
+                    await users[me].put("You are not logged in.")
+                else:
+                    match message:
+                        case ["login", nickname]:
+                            if me in Player.players:
+                                await Player.players[me].put("You are already logged in.")
 
-                        elif nickname in names:
-                            await users[me].put("This nickname is already taken.\n"
-                                                "Try 'who', to check already used nicknames")
-                        else:
-                            cl = Player(nickname, me, writer)
+                            elif nickname in names:
+                                await users[me].put("This nickname is already taken.\n"
+                                                    "Try 'who', to check already used nicknames")
+                            else:
+                                cl = Player(nickname, me, writer)
 
-                            dungeon.add_hero(cl.name, cl.hero)
+                                dungeon.add_hero(cl.name, cl.hero)
 
-                            for i in list(Player.players.values()):
-                                await users[i.address].put(f"{nickname} joined the server!")
-                            await users[me].put(f"<<< Welcome to Python-MUD 0.1 >>>")
+                                for i in list(Player.players.values()):
+                                    await users[i.address].put(f"{nickname} joined the server!")
+                                await users[me].put(f"<<< Welcome to Python-MUD 0.1 >>>")
 
-                    case ["who"]:
-                        await users[me].put("\n".join(names))
+                        case ["who"]:
+                            await users[me].put("\n".join(names))
 
-                    case ["up"]:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.")
-                        else:
-                            await users[me].put("\n".join(dungeon.change_hero_pos(Player.players[me].name, (0, -1))))
+                        case ["up"]:
+                            await users[me].put(
+                                "\n".join(dungeon.change_hero_pos(Player.players[me].name, (0, -1))))
 
-                    case ["down"]:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.")
-                        else:
+                        case ["down"]:
                             await users[me].put("\n".join(dungeon.change_hero_pos(Player.players[me].name, (0, 1))))
 
-                    case ["left"]:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.")
-                        else:
-                            await users[me].put("\n".join(dungeon.change_hero_pos(Player.players[me].name, (-1, 0))))
+                        case ["left"]:
+                            await users[me].put(
+                                "\n".join(dungeon.change_hero_pos(Player.players[me].name, (-1, 0))))
 
-                    case ["right"]:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.")
-                        else:
+                        case ["right"]:
                             await users[me].put("\n".join(dungeon.change_hero_pos(Player.players[me].name, (1, 0))))
 
-                    case ['addmon', *args]:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.")
-                        else:
+                        case ['addmon', *args]:
                             if len(args) == 8:
                                 if args[0] in list_cows() or args[0] == "jgsbat":
                                     ans = dungeon.add_mob(Player.players[me].name, Monster(args[0],
@@ -254,17 +243,15 @@ async def echo(reader, writer):
                                                                                             int(args[args.index(
                                                                                                 "coords") + 2])],
                                                                                            args[
-                                                                                               args.index("hello") + 1],
+                                                                                               args.index(
+                                                                                                   "hello") + 1],
                                                                                            int(args[args.index(
                                                                                                "hp") + 1])))
 
                                     for i in list(Player.players.values()):
                                         await users[i.address].put(ans)
 
-                    case ['attack', *args]:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.")
-                        else:
+                        case ['attack', *args]:
                             ans = dungeon.attack(Player.players[me].name, args[0], args[1])
 
                             if not ans[1]:
@@ -272,19 +259,11 @@ async def echo(reader, writer):
                             else:
                                 loop.run_until_complete(broadcast(ans))
 
-
-                    case ['sayall', *args]:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.")
-                        else:
+                        case ['sayall', *args]:
                             ans = f"{Player.players[me].name}: {args[0]}"
                             loop.run_until_complete(broadcast(ans))
 
-
-                    case ["quit"]:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.")
-                        else:
+                        case ["quit"]:
                             receive.cancel()
                             dungeon.del_hero(Player.players[me].name)
                             del Player.players[me], users[me]
@@ -293,11 +272,11 @@ async def echo(reader, writer):
 
                             await writer.wait_closed()
 
-                    case _:
-                        if me not in Player.players:
-                            await users[me].put("You are not logged in.\n")
-                        else:
-                            await users[me].put("Invalid command.")
+                        case _:
+                            if me not in Player.players:
+                                await users[me].put("You are not logged in.\n")
+                            else:
+                                await users[me].put("Invalid command.")
             elif q is receive:
                 receive = asyncio.create_task(users[me].get())
                 writer.write(f"{q.result()}\n".encode())
