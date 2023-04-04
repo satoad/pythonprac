@@ -94,29 +94,44 @@ class Dungeon:
     
     def mob_move(self):
         direction = {(0, 1): "up", (0, -1): "down", (1, 0): "right", (-1, 0): "left"}
+        first = True
         while True:
             if self.mobs:
+                if first:
+                    time.sleep(1)
+                    first = False
+                    
                 flag = True
                 while flag:
                     mob = random.choice([i for i in list(self.mobs.values())])
                     vect = list(random.choice([i for i in list(direction.keys())]))
-
                     pos = copy.copy(mob.pos)
-                    print(vect)
+
                     mob.pos[0] = (mob.pos[0] + vect[0]) % 10
                     mob.pos[1] = (mob.pos[1] + vect[1]) % 10
-                    print(mob.pos)
-
+                    
                     if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
                         self.dungeon[pos[0]][pos[1]] = None
                         self.dungeon[mob.pos[0]][mob.pos[1]] = mob
                         ans = f"{mob.name} moved one cell {direction[tuple(vect)]}"
                         loop.run_until_complete(broadcast(ans))
+                        
                         del self.mobs[tuple(pos)]
                         self.mobs.update({tuple(mob.pos): mob})
+                        for i in list(self.heroes.values()):
+                            print(f"mob pos {mob.pos} and hero pos {i.pos}")
+                            if mob.pos[0] == i.pos[0] and mob.pos[1] == i.pos[1]:
+                                ans = dungeon.encounter(i.pos[0], i.pos[1])
+
+                                for j in [pl for pl in Player.players.values()]:
+                                    if j.hero == i:
+                                        Player.players[j.address].writer.write("\n".join(ans).encode())
+
                         flag = False
 
-                time.sleep(30)
+                time.sleep(10)
+        else:
+            first = True
                 
                 
     def change_hero_pos(self, name, pos):
