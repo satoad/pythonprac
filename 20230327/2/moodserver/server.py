@@ -19,7 +19,6 @@ $the_cow = <<EOC;
 EOC
 """))
 
-
 users = {}
 
 
@@ -30,7 +29,7 @@ class Player:
         self.name = name
         self.hero = Hero(name)
         self.address = address
-        Player.players.update({address : self})
+        Player.players.update({address: self})
 
 
 class Hero:
@@ -56,7 +55,7 @@ class Dungeon:
         self.heroes = {}
 
     def add_hero(self, name, hero):
-        self.heroes.update({name:hero})
+        self.heroes.update({name: hero})
         print(self.heroes)
 
     def del_hero(self, name):
@@ -89,7 +88,6 @@ class Dungeon:
             msg += self.encounter(self.heroes[name].pos[0], self.heroes[name].pos[1])
         return msg
 
-
     def attack(self, hero_name, name, weapon):
         hero = self.heroes[hero_name]
         pos = (hero.pos[0], hero.pos[1])
@@ -119,7 +117,10 @@ class Dungeon:
             else:
                 msg = [f'No {name} here']
 
-        return ("\n".join(msg), broadcast)
+        return "\n".join(msg), broadcast
+
+
+dungeon = Dungeon()
 
 
 async def echo(reader, writer):
@@ -131,7 +132,7 @@ async def echo(reader, writer):
 
     while not reader.at_eof():
         done, pending = await asyncio.wait([send, receive], return_when=asyncio.FIRST_COMPLETED)
-       # print(list(Player.players.values()))
+        # print(list(Player.players.values()))
         names = [i.name for i in list(Player.players.values())]
 
         for q in done:
@@ -190,10 +191,14 @@ async def echo(reader, writer):
                             if len(args) == 8:
                                 if args[0] in list_cows() or args[0] == "jgsbat":
                                     ans = dungeon.add_mob(Player.players[me].name, Monster(args[0],
-                                                                  [int(args[args.index("coords") + 1]),
-                                                                   int(args[args.index("coords") + 2])],
-                                                                  args[args.index("hello") + 1],
-                                                                  int(args[args.index("hp") + 1])))
+                                                                                           [int(args[args.index(
+                                                                                               "coords") + 1]),
+                                                                                            int(args[args.index(
+                                                                                                "coords") + 2])],
+                                                                                           args[
+                                                                                               args.index("hello") + 1],
+                                                                                           int(args[args.index(
+                                                                                               "hp") + 1])))
 
                                     for i in list(Player.players.values()):
                                         await users[i.address].put(ans)
@@ -209,7 +214,7 @@ async def echo(reader, writer):
                             else:
                                 for i in list(Player.players.values()):
                                     await users[i.address].put(ans[0])
-                    
+
                     case ['sayall', *args]:
                         if me not in Player.players:
                             await users[me].put("You are not logged in.")
@@ -217,7 +222,7 @@ async def echo(reader, writer):
                             ans = f"{Player.players[me].name}: {args[0]}"
                             for i in list(Player.players.values()):
                                 await users[i.address].put(ans)
-                            
+
                     case ["quit"]:
                         if me not in Player.players:
                             await users[me].put("You are not logged in.")
@@ -227,7 +232,7 @@ async def echo(reader, writer):
                             del Player.players[me], users[me]
                             writer.write("Disconnect".encode())
                             writer.close()
-                
+
                             await writer.wait_closed()
 
                     case _:
@@ -250,12 +255,7 @@ async def echo(reader, writer):
     await writer.wait_closed()
 
 
-
 async def main():
     server = await asyncio.start_server(echo, '0.0.0.0', 1337)
     async with server:
         await server.serve_forever()
-
-dungeon = Dungeon()
-asyncio.run(main())
-
