@@ -1,5 +1,9 @@
-import asyncio
+import time
+import copy
 import shlex
+import random
+import asyncio
+import threading
 from io import StringIO
 from cowsay import cowsay, list_cows, read_dot_cow
 
@@ -25,10 +29,11 @@ users = {}
 class Player:
     players = {}
 
-    def __init__(self, name, address):
+    def __init__(self, name, address, writer):
         self.name = name
         self.hero = Hero(name)
         self.address = address
+        self.writer = writer
         Player.players.update({address: self})
 
 
@@ -48,11 +53,18 @@ class Monster:
         self.phrase = phrase
         self.hp = hp
 
+async def broadcast(ans):
+    for i in list(Player.players.values()):
+        i.writer.write(ans.encode())
+
+loop = asyncio.get_event_loop()
+
 
 class Dungeon:
     def __init__(self):
         self.dungeon = [[None for i in range(10)] for j in range(10)]
         self.heroes = {}
+        self.mobs = {}
 
     def add_hero(self, name, hero):
         self.heroes.update({name: hero})
@@ -64,10 +76,12 @@ class Dungeon:
     def add_mob(self, name, mob):
         if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
             self.dungeon[mob.pos[0]][mob.pos[1]] = mob
+            self.mobs.update({tuple(mob.pos): mob})
             return f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
                    f'with {mob.hp} health points.'
         else:
             self.dungeon[mob.pos[0]][mob.pos[1]] = mob
+            self.mobs.update({tuple(mob.pos): mob})
             return f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
                    f'with {mob.hp} health points.\n Replaced the old monster'
 
@@ -77,8 +91,35 @@ class Dungeon:
         else:
             return [cowsay(self.dungeon[x][y].phrase, cow=self.dungeon[x][y].name)]
 
+    
+    def mob_move(self):
+        direction = {(0, 1): "up", (0, -1): "down", (1, 0): "right", (-1, 0): "left"}
+        while True:
+            if self.mobs:
+                flag = True
+                while flag:
+                    mob = random.choice([i for i in list(self.mobs.values())])
+                    vect = list(random.choice([i for i in list(direction.keys())]))
+
+                    pos = copy.copy(mob.pos)
+                    print(vect)
+                    mob.pos[0] = (mob.pos[0] + vect[0]) % 10
+                    mob.pos[1] = (mob.pos[1] + vect[1]) % 10
+                    print(mob.pos)
+
+                    if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
+                        self.dungeon[pos[0]][pos[1]] = None
+                        self.dungeon[mob.pos[0]][mob.pos[1]] = mob
+                        ans = f"{mob.name} moved one cell {direction[tuple(vect)]}"
+                        loop.run_until_complete(broadcast(ans))
+                        del self.mobs[tuple(pos)]
+                        self.mobs.update({tuple(mob.pos): mob})
+                        flag = False
+
+                time.sleep(30)
+                
+                
     def change_hero_pos(self, name, pos):
-        print(name)
         self.heroes[name].pos[0] = (self.heroes[name].pos[0] + pos[0]) % 10
         self.heroes[name].pos[1] = (self.heroes[name].pos[1] + pos[1]) % 10
 
@@ -121,6 +162,8 @@ class Dungeon:
 
 
 dungeon = Dungeon()
+gm = threading.Thread(target=dungeon.mob_move)
+gm.start()
 
 
 async def echo(reader, writer):
@@ -149,7 +192,7 @@ async def echo(reader, writer):
                             await users[me].put("This nickname is already taken.\n"
                                                 "Try 'who', to check already used nicknames")
                         else:
-                            cl = Player(nickname, me)
+                            cl = Player(nickname, me, writer)
 
                             dungeon.add_hero(cl.name, cl.hero)
 
@@ -212,16 +255,16 @@ async def echo(reader, writer):
                             if not ans[1]:
                                 await users[me].put(ans[0])
                             else:
-                                for i in list(Player.players.values()):
-                                    await users[i.address].put(ans[0])
+                                loop.run_until_complete(broadcast(ans))
+
 
                     case ['sayall', *args]:
                         if me not in Player.players:
                             await users[me].put("You are not logged in.")
                         else:
                             ans = f"{Player.players[me].name}: {args[0]}"
-                            for i in list(Player.players.values()):
-                                await users[i.address].put(ans)
+                            loop.run_until_complete(broadcast(ans))
+
 
                     case ["quit"]:
                         if me not in Player.players:

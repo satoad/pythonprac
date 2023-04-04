@@ -12,9 +12,9 @@ def recv(cmdline):
         ans = s.recv(2048).decode()
         if ans:
             if ans.strip() == "Disconnect":
-                break
+                return
 
-            print(f"\n{ans}\n{cmdline.prompt}{readline.get_line_buffer()}", end="", flush=True)
+            print(f"\n{ans.strip()}\n{cmdline.prompt}{readline.get_line_buffer()}", end="", flush=True)
 
 
 class Game(cmd.Cmd):
