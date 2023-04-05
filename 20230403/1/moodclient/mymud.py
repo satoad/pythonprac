@@ -23,28 +23,36 @@ class Game(cmd.Cmd):
         self.prompt = prompt
         self.use_rawinput = False
 
-    def do_login(self, args):
+    @staticmethod
+    def do_login(args):
         s.send(("login " + args + '\n').encode())
 
-    def do_who(self, args):
-        s.send(("who\n").encode())
+    @staticmethod
+    def do_who(args):
+        s.send("who\n".encode())
 
-    def do_up(self, args):
-        s.send(("up\n").encode())
+    @staticmethod
+    def do_up(args):
+        s.send("up\n".encode())
 
-    def do_down(self, args):
-        s.send(("down\n").encode())
+    @staticmethod
+    def do_down(args):
+        s.send("down\n".encode())
 
-    def do_left(self, args):
-        s.send(("left\n").encode())
+    @staticmethod
+    def do_left(args):
+        s.send("left\n".encode())
 
-    def do_right(self, args):
-        s.send(("right\n").encode())
-        
-    def do_sayall(self, args):
+    @staticmethod
+    def do_right(args):
+        s.send("right\n".encode())
+
+    @staticmethod
+    def do_sayall(args):
         s.send(("sayall " + args + '\n').encode())
 
-    def do_addmon(self, args):
+    @staticmethod
+    def do_addmon(args):
         inp = shlex.split(args)
         if len(inp) == 8:
             if inp[0] in list_cows() or inp[0] == "jgsbat":
@@ -55,7 +63,8 @@ class Game(cmd.Cmd):
         else:
             print("Invalid arguments")
 
-    def do_attack(self, args):
+    @staticmethod
+    def do_attack(args):
         weapons = {"sword": 10, "spear": 15, "axe": 20}
 
         inp = shlex.split(args)
@@ -74,7 +83,8 @@ class Game(cmd.Cmd):
         else:
             print("Invalid arguments")
 
-    def complete_attack(self, prefix, line, start, end):
+    @staticmethod
+    def complete_attack(prefix, line, start, end):
         complete_name = list_cows() + ["jgsbat"]
         complete_weapon = ["sword", "spear", "axe"]
 
@@ -103,7 +113,8 @@ class Game(cmd.Cmd):
                     if comp.startswith(prefix)
                 ]
 
-    def do_quit(self, args):
+    @staticmethod
+    def do_quit(args):
         s.send("quit\n".encode())
         sys.exit()
 
@@ -117,7 +128,9 @@ def game():
     cmdline = Game()
     gm = threading.Thread(target=recv, args=(cmdline,))
     gm.start()
+    
     Game().cmdloop()
+
 
 def main():
     global s

@@ -85,7 +85,7 @@ class Dungeon:
             self.dungeon[mob.pos[0]][mob.pos[1]] = mob
             self.mobs.update({tuple(mob.pos): mob})
             return f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
-                   f'with {mob.hp} health points.\n Replaced the old monster'
+                   f'with {mob.hp} health points.\nReplaced the old monster'
 
     def encounter(self, x, y):
         if self.dungeon[x][y].name == "jgsbat":
@@ -114,11 +114,13 @@ class Dungeon:
                     if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
                         self.dungeon[pos[0]][pos[1]] = None
                         self.dungeon[mob.pos[0]][mob.pos[1]] = mob
+                        
                         ans = f"{mob.name} moved one cell {direction[tuple(vect)]}"
                         loop.run_until_complete(broadcast(ans))
 
                         del self.mobs[tuple(pos)]
                         self.mobs.update({tuple(mob.pos): mob})
+                        
                         for i in list(self.heroes.values()):
                             print(f"mob pos {mob.pos} and hero pos {i.pos}")
                             if mob.pos[0] == i.pos[0] and mob.pos[1] == i.pos[1]:
@@ -197,13 +199,15 @@ async def echo(reader, writer):
                 send = asyncio.create_task(reader.readline())
 
                 message = shlex.split(q.result().decode().strip())
+                print(message)
                 if me not in Player.players and message[0] != "login" and message[0] != "who":
                     await users[me].put("You are not logged in.")
                 else:
+                    print(f"match {message}")
                     match message:
                         case ["login", nickname]:
                             if me in Player.players:
-                                await Player.players[me].put("You are already logged in.")
+                                await Player.players[me].writer.write("You are already logged in.".encode())
 
                             elif nickname in names:
                                 await users[me].put("This nickname is already taken.\n"
