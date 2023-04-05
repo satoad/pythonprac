@@ -128,7 +128,7 @@ def game():
     cmdline = Game()
     gm = threading.Thread(target=recv, args=(cmdline,))
     gm.start()
-    
+
     Game().cmdloop()
 
 

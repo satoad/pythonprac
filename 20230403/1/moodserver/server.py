@@ -31,7 +31,7 @@ users = {}
 
 class Player:
     """Class representation of player."""
-    
+
     players = {}
 
     def __init__(self, name, address, writer):
@@ -72,6 +72,7 @@ class Monster:
 
 async def broadcast(ans):
     """Broadcast message implementation."""
+    
     for i in list(Player.players.values()):
         i.writer.write(ans.encode())
 
@@ -92,30 +93,31 @@ class Dungeon:
 
     def add_hero(self, name, hero):
         """Adding new hero to dungeon."""
+        
         self.heroes.update({name: hero})
         print(self.heroes)
 
     def del_hero(self, name):
         """Deleting hero from dungeon."""
+        
         del self.heroes[name]
 
     def add_mob(self, name, mob):
         """Adding new monster to dungeon."""
         
         if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
-            self.dungeon[mob.pos[0]][mob.pos[1]] = mob
-            self.mobs.update({tuple(mob.pos): mob})
-            return f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
+            ans = f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
                    f'with {mob.hp} health points.'
         else:
-            self.dungeon[mob.pos[0]][mob.pos[1]] = mob
-            self.mobs.update({tuple(mob.pos): mob})
-            return f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
+            ans = f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
                    f'with {mob.hp} health points.\nReplaced the old monster'
+        self.dungeon[mob.pos[0]][mob.pos[1]] = mob
+        self.mobs.update({tuple(mob.pos): mob})
+        return ans
 
     def encounter(self, x, y):
         """Check for an encounter with a monster."""
-
+        
         if self.dungeon[x][y].name == "jgsbat":
             return [cowsay(self.dungeon[x][y].phrase, cowfile=bat)]
         else:
@@ -144,13 +146,13 @@ class Dungeon:
                     if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
                         self.dungeon[pos[0]][pos[1]] = None
                         self.dungeon[mob.pos[0]][mob.pos[1]] = mob
-                        
+
                         ans = f"{mob.name} moved one cell {direction[tuple(vect)]}"
                         loop.run_until_complete(broadcast(ans))
 
                         del self.mobs[tuple(pos)]
                         self.mobs.update({tuple(mob.pos): mob})
-                        
+
                         for i in list(self.heroes.values()):
                             print(f"mob pos {mob.pos} and hero pos {i.pos}")
                             if mob.pos[0] == i.pos[0] and mob.pos[1] == i.pos[1]:
@@ -163,8 +165,8 @@ class Dungeon:
                         flag = False
 
                 time.sleep(10)
-        else:
-            first = True
+            else:
+                first = True
 
     def change_hero_pos(self, name, pos):
         """Hero moves implementation."""
@@ -180,6 +182,7 @@ class Dungeon:
 
     def attack(self, hero_name, name, weapon):
         """Hero's attack implementation"""
+
         hero = self.heroes[hero_name]
         pos = (hero.pos[0], hero.pos[1])
         dmg = hero.weapons[weapon]
@@ -220,7 +223,7 @@ async def echo(reader, writer):
     """Server implementation."""
 
     me = "{}:{}".format(*writer.get_extra_info('peername'))
-    #print(me)
+    # print(me)
     users[me] = asyncio.Queue()
     send = asyncio.create_task(reader.readline())
     receive = asyncio.create_task(users[me].get())
@@ -234,15 +237,13 @@ async def echo(reader, writer):
                 send = asyncio.create_task(reader.readline())
 
                 message = shlex.split(q.result().decode().strip())
-                #print(message)
                 if me not in Player.players and message[0] != "login" and message[0] != "who":
                     await users[me].put("You are not logged in.")
                 else:
-                    #print(f"match {message}")
                     match message:
                         case ["login", nickname]:
                             if me in Player.players:
-                                await Player.players[me].writer.write("You are already logged in.".encode())
+                                await Player.players[me].put("You are already logged in.")
 
                             elif nickname in names:
                                 await users[me].put("This nickname is already taken.\n"
