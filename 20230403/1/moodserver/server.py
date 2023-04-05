@@ -1,3 +1,6 @@
+"""MOOD server"""
+
+
 import time
 import copy
 import shlex
@@ -27,9 +30,13 @@ users = {}
 
 
 class Player:
+    """Class representation of player."""
+    
     players = {}
 
     def __init__(self, name, address, writer):
+        """Initialization method."""
+
         self.name = name
         self.hero = Hero(name)
         self.address = address
@@ -38,7 +45,12 @@ class Player:
 
 
 class Hero:
+    """Class representation of player's hero."""
+
+
     def __init__(self, name, pos=None):
+        """Initialization method."""
+
         if pos is None:
             pos = [0, 0]
         self.pos = pos
@@ -47,7 +59,11 @@ class Hero:
 
 
 class Monster:
+    """Class representation of monster."""
+
     def __init__(self, name, pos, phrase, hp):
+        """Initialization method."""
+
         self.name = name
         self.pos = pos
         self.phrase = phrase
@@ -55,6 +71,7 @@ class Monster:
 
 
 async def broadcast(ans):
+    """Broadcast message implementation."""
     for i in list(Player.players.values()):
         i.writer.write(ans.encode())
 
@@ -63,19 +80,28 @@ loop = asyncio.get_event_loop()
 
 
 class Dungeon:
+    """Class representation of dungeon."""
+
+
     def __init__(self):
+        """Initialization method."""
+
         self.dungeon = [[None for i in range(10)] for j in range(10)]
         self.heroes = {}
         self.mobs = {}
 
     def add_hero(self, name, hero):
+        """Adding new hero to dungeon."""
         self.heroes.update({name: hero})
         print(self.heroes)
 
     def del_hero(self, name):
+        """Deleting hero from dungeon."""
         del self.heroes[name]
 
     def add_mob(self, name, mob):
+        """Adding new monster to dungeon."""
+        
         if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
             self.dungeon[mob.pos[0]][mob.pos[1]] = mob
             self.mobs.update({tuple(mob.pos): mob})
@@ -88,12 +114,16 @@ class Dungeon:
                    f'with {mob.hp} health points.\nReplaced the old monster'
 
     def encounter(self, x, y):
+        """Check for an encounter with a monster."""
+
         if self.dungeon[x][y].name == "jgsbat":
             return [cowsay(self.dungeon[x][y].phrase, cowfile=bat)]
         else:
             return [cowsay(self.dungeon[x][y].phrase, cow=self.dungeon[x][y].name)]
 
     def mob_move(self):
+        """Monster straying implementation."""
+    
         direction = {(0, 1): "up", (0, -1): "down", (1, 0): "right", (-1, 0): "left"}
         first = True
         while True:
@@ -137,6 +167,8 @@ class Dungeon:
             first = True
 
     def change_hero_pos(self, name, pos):
+        """Hero moves implementation."""
+        
         self.heroes[name].pos[0] = (self.heroes[name].pos[0] + pos[0]) % 10
         self.heroes[name].pos[1] = (self.heroes[name].pos[1] + pos[1]) % 10
 
@@ -147,6 +179,7 @@ class Dungeon:
         return msg
 
     def attack(self, hero_name, name, weapon):
+        """Hero's attack implementation"""
         hero = self.heroes[hero_name]
         pos = (hero.pos[0], hero.pos[1])
         dmg = hero.weapons[weapon]
@@ -184,6 +217,8 @@ gm.start()
 
 
 async def echo(reader, writer):
+    """Server implementation."""
+
     me = "{}:{}".format(*writer.get_extra_info('peername'))
     #print(me)
     users[me] = asyncio.Queue()
@@ -199,11 +234,11 @@ async def echo(reader, writer):
                 send = asyncio.create_task(reader.readline())
 
                 message = shlex.split(q.result().decode().strip())
-                print(message)
+                #print(message)
                 if me not in Player.players and message[0] != "login" and message[0] != "who":
                     await users[me].put("You are not logged in.")
                 else:
-                    print(f"match {message}")
+                    #print(f"match {message}")
                     match message:
                         case ["login", nickname]:
                             if me in Player.players:
