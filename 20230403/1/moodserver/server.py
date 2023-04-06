@@ -33,6 +33,7 @@ class Player:
     """Class representation of player."""
 
     players = {}
+    """Dictionary of connected players."""
 
     def __init__(self, name, address, writer):
         """Initialization method.
