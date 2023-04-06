@@ -35,8 +35,14 @@ class Player:
     players = {}
 
     def __init__(self, name, address, writer):
-        """Initialization method."""
+        """Initialization method.
 
+           Args:
+               name (str): Player's nickname
+               address (str): Player's ip address
+               writer (asyncio.streams.StreamWriter): Player's write stream
+        """
+        
         self.name = name
         self.hero = Hero(name)
         self.address = address
@@ -47,10 +53,14 @@ class Player:
 class Hero:
     """Class representation of player's hero."""
 
-
     def __init__(self, name, pos=None):
-        """Initialization method."""
+        """Initialization method.
 
+            Args:
+                name (str): Hero's nickname
+                pos (list): Hero's position in dungeon
+        """
+        
         if pos is None:
             pos = [0, 0]
         self.pos = pos
@@ -62,8 +72,15 @@ class Monster:
     """Class representation of monster."""
 
     def __init__(self, name, pos, phrase, hp):
-        """Initialization method."""
+        """Initialization method.
 
+            Args:
+                name (str): Monster's nickname
+                pos (list): Monster's ip address
+                phrase (str): Monster's hello phrase
+                hp (int): Monster's health points
+        """
+        
         self.name = name
         self.pos = pos
         self.phrase = phrase
@@ -71,7 +88,11 @@ class Monster:
 
 
 async def broadcast(ans):
-    """Broadcast message implementation."""
+    """Broadcast message implementation.
+
+        Args:
+            ans (str): Message for players
+    """
     
     for i in list(Player.players.values()):
         i.writer.write(ans.encode())
@@ -92,18 +113,32 @@ class Dungeon:
         self.mobs = {}
 
     def add_hero(self, name, hero):
-        """Adding new hero to dungeon."""
+        """Adding new hero to dungeon.
+
+            Args:
+                name (str): Hero's name
+                hero (Hero): Hero
+        """
         
         self.heroes.update({name: hero})
         print(self.heroes)
 
     def del_hero(self, name):
-        """Deleting hero from dungeon."""
+        """Deleting hero from dungeon.
+
+            Args:
+                name (str): Hero's name
+        """
         
         del self.heroes[name]
 
     def add_mob(self, name, mob):
-        """Adding new monster to dungeon."""
+        """Adding new monster to dungeon.
+
+            Args:
+                name (str): Monster's name
+                mob (Monster): Monster
+        """
         
         if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
             ans = f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
@@ -116,7 +151,12 @@ class Dungeon:
         return ans
 
     def encounter(self, x, y):
-        """Check for an encounter with a monster."""
+        """Check for an encounter with a monster.
+
+            Args:
+                x (int): abscissa coordinate
+                y (int): ordinate coordinate
+        """
         
         if self.dungeon[x][y].name == "jgsbat":
             return [cowsay(self.dungeon[x][y].phrase, cowfile=bat)]
@@ -169,7 +209,12 @@ class Dungeon:
                 first = True
 
     def change_hero_pos(self, name, pos):
-        """Hero moves implementation."""
+        """Hero moves implementation.
+
+            Args:
+                name (str): Hero's name
+                pos (list): Hero's movement
+        """
         
         self.heroes[name].pos[0] = (self.heroes[name].pos[0] + pos[0]) % 10
         self.heroes[name].pos[1] = (self.heroes[name].pos[1] + pos[1]) % 10
@@ -181,8 +226,14 @@ class Dungeon:
         return msg
 
     def attack(self, hero_name, name, weapon):
-        """Hero's attack implementation"""
-
+        """Hero's attack implementation
+            
+            Args:
+                hero_name (str): Hero's name
+                name (str): Monster's name
+                weapon (str): Type of hero's weapon
+        """
+        
         hero = self.heroes[hero_name]
         pos = (hero.pos[0], hero.pos[1])
         dmg = hero.weapons[weapon]
@@ -224,6 +275,8 @@ async def echo(reader, writer):
 
     me = "{}:{}".format(*writer.get_extra_info('peername'))
     # print(me)
+    print(type(writer), writer)
+
     users[me] = asyncio.Queue()
     send = asyncio.create_task(reader.readline())
     receive = asyncio.create_task(users[me].get())
