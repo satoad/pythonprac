@@ -49,4 +49,5 @@ class TestServer(TestCase):
     
     @classmethod
     def tearDownClass(cls):
-        cls.proc.kill()
+        cls.socket.close()
+        cls.proc.terminate()

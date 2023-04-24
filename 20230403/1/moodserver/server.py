@@ -35,19 +35,21 @@ class Player:
     players = {}
     """Dictionary of connected players."""
 
-    def __init__(self, name, address, writer):
+    def __init__(self, name, address, writer, locale="en"):
         """Initialization method.
 
            Args:
                name (str): Player's nickname
                address (str): Player's ip address
                writer (asyncio.streams.StreamWriter): Player's write stream
+               locale (str): Player's message language
         """
         
         self.name = name
         self.hero = Hero(name)
         self.address = address
         self.writer = writer
+        self.locale = locale
         Player.players.update({address: self})
 
 
@@ -356,6 +358,10 @@ async def echo(reader, writer):
                         case ['sayall', *args]:
                             ans = f"{Player.players[me].name}: {args[0]}"
                             loop.run_until_complete(broadcast(ans))
+                        
+                        case ["locale", *args]:
+                            
+                            
 
                         case ["quit"]:
                             receive.cancel()

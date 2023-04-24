@@ -4,10 +4,13 @@
 import time
 import copy
 import shlex
+import locale
 import random
 import asyncio
+import gettext
 import threading
 from io import StringIO
+from babel import Locale
 from cowsay import cowsay, list_cows, read_dot_cow
 
 bat = read_dot_cow(StringIO("""
@@ -142,8 +145,7 @@ class Dungeon:
         """
         
         if self.dungeon[mob.pos[0]][mob.pos[1]] is None:
-            ans = f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
-                   f'with {mob.hp} health points.'
+            ans = _("Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, with {mob.hp} health points.").format()
         else:
             ans = f'Player {name} added monster {mob.name} to ({mob.pos[0]}, {mob.pos[1]}) saying {mob.phrase}, ' \
                    f'with {mob.hp} health points.\nReplaced the old monster'

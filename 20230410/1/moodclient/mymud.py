@@ -46,6 +46,10 @@ class Game(cmd.Cmd):
     @staticmethod
     def do_right(args):
         s.send("right\n".encode())
+    
+    @staticmethod
+    def do_locale(args):
+        s.send(("locale " + args + '\n').encode())
 
     @staticmethod
     def do_sayall(args):
