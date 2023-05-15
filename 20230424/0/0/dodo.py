@@ -3,7 +3,6 @@ def task_test():
     yield {'actions': ['coverage run -m unittest -v'], 'name': "run"}
     yield {'actions': ['coverage report'], 'verbosity': 2, 'name': "report"}
 
-
 def task_pot():
     """Re-create .pot ."""
     return {

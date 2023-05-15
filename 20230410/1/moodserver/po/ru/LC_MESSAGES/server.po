@@ -1,0 +1,76 @@
+# Russian translations for PROJECT.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-05-15 23:00+0300\n"
+"PO-Revision-Date: 2023-05-13 15:54+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: server.py:154
+msgid "Player {} added monster {} to ({}, {}) saying {}, with {} health points."
+msgstr ""
+"Игрок {} добавил монстра {} в ({}, {}) говорящего {}, с {} очками "
+"здоровья."
+
+#: server.py:156
+msgid ""
+"Player {} added monster {} to ({}, {}) saying {}, with {} health points.\n"
+"Replaced the old monster"
+msgstr ""
+"Игрок {} добавил монстра {} в ({}, {}) говорящего {}, с {} очками "
+"здоровья. Заменил старого монстра."
+
+#: server.py:199
+msgid "{} moved one cell {}"
+msgstr "{} переместился на одну клетку {}"
+
+#: server.py:231
+msgid "Moved to ({}, {})"
+msgstr "Переместился в ({}, {})"
+
+#: server.py:249
+msgid "No monster here"
+msgstr "Здесь нет монстра"
+
+#: server.py:261
+msgid "Player {} attacked {} with {}, damage {} hp"
+msgstr "Игрок {} атаковал {} с помощью {}, урон {} очков здоровья"
+
+#: server.py:264
+msgid "{} died"
+msgstr "{} умер"
+
+#: server.py:268
+msgid "{} now has {} hp"
+msgstr "{} теперь имеет {} очков здоровья"
+
+#: server.py:272
+msgid "No {} here"
+msgstr "{} здесь нет"
+
+#: server.py:380
+msgid "Set up locale: {}"
+msgstr "Язык изменен на: {}"
+
+#~ msgid "Moved to ({}, {})"
+#~ msgstr "Переместился в ({}, {})"
+
+#~ msgid "Player {} attacked {} with {}, damage {} hp"
+#~ msgstr "Игрок {} атаковал {} c {}, урон {} очков здоровья"
+
+#~ msgid "{} now has {} hp"
+#~ msgstr "{} теперь имеет {} очков здоровья"
+
