@@ -1,6 +1,6 @@
 from unittest import main, TestCase
 from unittest.mock import MagicMock
-from moodclient.mymud import Game
+from moodclient.moodclient.mymud import Game
 import sys
 from io import StringIO
 

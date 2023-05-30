@@ -1,0 +1,3 @@
+[console_scripts]
+RunTests = test:run_tests
+StartClient = moodclient.client:main

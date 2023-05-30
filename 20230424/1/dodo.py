@@ -11,9 +11,9 @@ def task_test_client():
 
 def task_html():
     return {
-        "actions": ["sphinx-build -M html moodserver/moodserver _build"],
-        "clean": [lambda: shutil.rmtree("docs/build")],
-    }
+            'actions': ['sphinx-build -M html doc/source build'],
+           }
+
 
 
 def task_whlserver():
