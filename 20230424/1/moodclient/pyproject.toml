@@ -19,5 +19,5 @@ requires = ["build", "coverage", "doit", "flake8", "pydocstyle", "setuptools"]
 Packages = ["moodclient"]
 
 [project.scripts]
-StartClient = "moodclient.client:main"
+StartClient = "moodclient.mymud:main"
 RunTests = "test:run_tests"

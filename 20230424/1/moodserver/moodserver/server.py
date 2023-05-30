@@ -412,3 +412,6 @@ async def main():
     server = await asyncio.start_server(echo, '0.0.0.0', 1337)
     async with server:
         await server.serve_forever()
+
+def start_server():
+    asyncio.run(main())

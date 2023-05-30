@@ -19,7 +19,7 @@ requires = ["Sphinx", "build", "coverage", "doit", "flake8", "pydocstyle", "setu
 Packages = ["moodserver"]
 
 [project.scripts]
-StartServer = "moodserver.server:main"
+StartServer = "moodserver.server:start_server"
 
 [tool.setuptools.package-dir]
 moodserver = "moodserver"
