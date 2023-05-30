@@ -15,6 +15,7 @@ flake8 = "*"
 flake8 = "*"
 pydocstyle = "*"
 coverage = "*"
+doit = "*"
 
 [requires]
 python_version = "3.11"
