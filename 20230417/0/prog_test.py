@@ -22,7 +22,7 @@ class TestServer(TestCase):
     def setUpClass(cls):
         cls.proc = multiprocessing.Process(target=server.serve)
         cls.proc.start()
-        time.sleep(2)  # Да, это костыль!
+        time.sleep(2) 
 
     def setUp(self):
         _socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
