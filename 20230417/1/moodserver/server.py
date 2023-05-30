@@ -132,7 +132,7 @@ class Dungeon:
         """
         
         self.heroes.update({name: hero})
-        print(self.heroes)
+        #print(self.heroes)
 
     def del_hero(self, name):
         """Deleting hero from dungeon.
@@ -154,7 +154,7 @@ class Dungeon:
             ans = _("Player {} added monster {} to ({}, {}) saying {}, with {} health points.").format(name, mob.name, mob.pos[0], mob.pos[1], mob.phrase, mob.hp)
         else:
             ans = _("Player {} added monster {} to ({}, {}) saying {}, with {} health points.\nReplaced the old monster").format(name, mob.name, mob.pos[0], mob.pos[1], mob.phrase, mob.hp)
-        print(ans)
+        print("added monster {} to ({}, {}) saying {}, with {} health points.".format(mob.name, mob.pos[0], mob.pos[1], mob.phrase, mob.hp))
         self.dungeon[mob.pos[0]][mob.pos[1]] = mob
         self.mobs.update({tuple(mob.pos): mob})
         return ans
@@ -229,7 +229,7 @@ class Dungeon:
         self.heroes[name].pos[1] = (self.heroes[name].pos[1] + pos[1]) % 10
         
         msg = [_("Moved to ({}, {})").format(self.heroes[name].pos[0], self.heroes[name].pos[1])]
-        print(msg)
+        #print(msg)
         if self.dungeon[self.heroes[name].pos[0]][self.heroes[name].pos[1]] is not None:
             msg += self.encounter(self.heroes[name].pos[0], self.heroes[name].pos[1])
         return msg
@@ -284,7 +284,7 @@ async def echo(reader, writer):
 
     me = "{}:{}".format(*writer.get_extra_info('peername'))
     # print(me)
-    print(type(writer), writer)
+    #print(type(writer), writer)
 
     users[me] = asyncio.Queue()
     send = asyncio.create_task(reader.readline())
@@ -299,7 +299,7 @@ async def echo(reader, writer):
                 send = asyncio.create_task(reader.readline())
 
                 message = shlex.split(q.result().decode().strip())
-                print(message)
+                #print(message)
                 if me not in Player.players and message[0] != "login" and message[0] != "who":
                     await users[me].put("You are not logged in.")
                 else:
