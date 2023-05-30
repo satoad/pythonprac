@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+python-cowsay = "*"
+sphinx = "*"
+babel = "*"
+doit = "*"
+build = "*"
+flake8 = "*"
+
+[dev-packages]
+flake8 = "*"
+pydocstyle = "*"
+coverage = "*"
+
+[requires]
+python_version = "3.11"

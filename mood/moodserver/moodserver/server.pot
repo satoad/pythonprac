@@ -1,0 +1,61 @@
+# Translations template for PROJECT.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-05-15 23:00+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: server.py:154
+msgid "Player {} added monster {} to ({}, {}) saying {}, with {} health points."
+msgstr "Игрок {} добавил монстра {} to ({}, {}) говорящего {}, с {} очками здоровья."
+
+#: server.py:156
+msgid ""
+"Player {} added monster {} to ({}, {}) saying {}, with {} health points.\n"
+"Replaced the old monster"
+msgstr "Игрок {} добавил монстра {} to ({}, {}) говорящего {}, с {} очками здоровья.\nСтарый монстр заменен."
+
+#: server.py:199
+msgid "{} moved one cell {}"
+msgstr "{} переместился на одну клетку {}"
+
+#: server.py:231
+msgid "Moved to ({}, {})"
+msgstr "Переместился в ({}, {})"
+
+#: server.py:249
+msgid "No monster here"
+msgstr "Здесь монстра нет"
+
+#: server.py:261
+msgid "Player {} attacked {} with {}, damage {} hp"
+msgstr "Игрок {} атаковал {} с помощью {}, урон {} очков здоровья"
+
+#: server.py:264
+msgid "{} died"
+msgstr "{} умер"
+
+#: server.py:268
+msgid "{} now has {} hp"
+msgstr "{} теперь имеет {} очков здоровья"
+
+#: server.py:272
+msgid "No {} here"
+msgstr "{} здесь нет"
+
+#: server.py:380
+msgid "Set up locale: {}"
+msgstr "Выбран язык: {}"
+

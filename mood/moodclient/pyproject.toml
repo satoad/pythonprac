@@ -1,0 +1,23 @@
+[project]
+name = "MoodClient"
+version = "0.1.0"
+description = "Client package for MOOD"
+readme = "README.rst"
+requires-python = ">=3.10"
+license = {file = "COPYING"}
+authors = [
+ {name = "Vitaly Sagalevich", email = "vsagalev@gmail.com"}
+]
+
+dependencies = ["python-cowsay"]
+
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["build", "coverage", "doit", "flake8", "pydocstyle", "setuptools"]
+
+[tools.setuptools]
+Packages = ["moodclient"]
+
+[project.scripts]
+StartClient = "moodclient.mymud:main"
+RunTests = "test:run_tests"
