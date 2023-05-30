@@ -10,7 +10,6 @@ import asyncio
 import gettext
 import threading
 from io import StringIO
-from babel import Locale
 from cowsay import cowsay, list_cows, read_dot_cow
 
 popath = os.path.join(os.path.dirname(__file__), "po")
